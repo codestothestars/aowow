@@ -6,7 +6,7 @@ if (!defined('AOWOW_REVISION'))
 if (!CLI)
     die('not in cli mode');
 
-
+require 'config/config.php';
 require_once 'setup/tools/CLISetup.class.php';
 require_once 'setup/tools/setupScript.class.php';
 require_once 'setup/tools/dbc.class.php';
@@ -20,7 +20,7 @@ function finish() : void
     die("\n");
 }
 
-CLISetup::init();
+CLISetup::init($AoWoWconf);
 
 if (!CLISetup::getOpt(0x3))
     die(CLISetup::optHelp(0x7));
@@ -56,7 +56,7 @@ switch ($cmd)                                               // we accept only on
             if (empty($n))
                 continue;
 
-            $dbc = new DBC(trim($n), ['temporary' => false]);
+            $dbc = new DBC(trim($n), $AoWoWconf, ['temporary' => false]);
             if ($dbc->error)
             {
                 CLI::write('CLISetup::loadDBC() - required DBC '.$name.'.dbc not found!', CLI::LOG_ERROR);

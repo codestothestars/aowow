@@ -6,6 +6,11 @@ if (!defined('AOWOW_REVISION'))
 if (!CLI)
     die('not in cli mode');
 
+require 'config/config.php';
+
+global $arielsGlobalConf;
+
+$arielsGlobalConf = $AoWoWconf;
 
 trait TrDBCcopy
 {
@@ -21,7 +26,7 @@ trait TrDBCcopy
 
         CLI::write('SqlGen::generate() - copying '.$this->dbcSourceFiles[0].'.dbc into aowow_'.$this->command);
 
-        $dbc = new DBC($this->dbcSourceFiles[0], ['temporary' => false, 'tableName' => 'aowow_'.$this->command]);
+        $dbc = new DBC($this->dbcSourceFiles[0], $GLOBALS['arielsGlobalConf'], ['temporary' => false, 'tableName' => 'aowow_'.$this->command]);
         if ($dbc->error)
             return false;
 

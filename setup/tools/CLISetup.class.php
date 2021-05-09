@@ -6,6 +6,7 @@ if (!defined('AOWOW_REVISION'))
 if (!CLI)
     die('not in cli mode');
 
+require 'config/config.php';
 
 class CLISetup
 {
@@ -14,6 +15,7 @@ class CLISetup
 
     public  static $srcDir        = 'setup/mpqdata/';
 
+    private static $config;
     private static $mpqFiles      = [];
     public  static $expectedPaths = array(                  // update paths [yes, you can have en empty string as key]
         ''     => LOCALE_EN,    'enGB' => LOCALE_EN,    'enUS' => LOCALE_EN,
@@ -68,11 +70,13 @@ class CLISetup
     /* command line arguments */
     /**************************/
 
-    public static function init() : void
+    public static function init(array $config) : void
     {
         $short = '';
         $long  = [];
         $alias = [];
+
+        self::$config = $config;
 
         foreach (self::$optDefs as $opt => [$idx, $aliasses, $flags, , ])
         {
@@ -337,7 +341,7 @@ class CLISetup
         if (DB::Aowow()->selectCell('SHOW TABLES LIKE ?', 'dbc_'.$name) && DB::Aowow()->selectCell('SELECT count(1) FROM ?#', 'dbc_'.$name))
             return true;
 
-        $dbc = new DBC($name, ['temporary' => self::getOpt('delete')]);
+        $dbc = new DBC($name, self::$config, ['temporary' => self::getOpt('delete')]);
         if ($dbc->error)
         {
             CLI::write('CLISetup::loadDBC() - required DBC '.$name.'.dbc not found!', CLI::LOG_ERROR);

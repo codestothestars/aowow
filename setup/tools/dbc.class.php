@@ -262,7 +262,7 @@ class DBC
     public $file   = '';
 
 
-    public function __construct($file, $opts = [])
+    public function __construct($file, array $config, $opts = [])
     {
         $file = strtolower($file);
         if (empty($this->_fields[$file]) || empty($this->_formats[$file]))
@@ -271,6 +271,7 @@ class DBC
             return;
         }
 
+        $this->config    = $config;
         $this->fields    = explode(',', $this->_fields[$file]);
         $this->format    = $this->_formats[$file];
         $this->file      = $file;
@@ -303,7 +304,7 @@ class DBC
             if ($foundMask & (1 << $locId))
                 continue;
 
-            $fullPath = CLI::nicePath($this->file.'.dbc', CLISetup::$srcDir, $locStr, 'DBFilesClient');
+            $fullPath = CLI::nicePath($this->file.'.dbc', CLISetup::$srcDir, $locStr, $this->config['client'], 'DBFilesClient');
             if (!CLISetup::fileExists($fullPath))
                 continue;
 
