@@ -21,6 +21,7 @@ function finish() : void
 }
 
 CLISetup::init($AoWoWconf);
+DBC::init($AoWoWconf);
 
 if (!CLISetup::getOpt(0x3))
     die(CLISetup::optHelp(0x7));
